@@ -1,0 +1,105 @@
+﻿import java.util.Scanner;
+//
+//Michael Zou Wu
+public class SocSecProccessor{
+//the String args
+public static void main (String []args){
+Scanner ab = new Scanner(System.in); //this has to come back to read the data from input
+
+
+//this loop reads the inputs
+String choice="Y";
+do {
+System.out.println("Name?");
+String name = ab.nextLine();
+System.out.println("SSN?");
+String ssn = ab.nextLine();
+//try and catch
+try {
+if(isValid(ssn)) {
+System.out.println(name + "" + ssn + " is Valid");
+}
+//exception
+}catch (SocSecException e) {
+System.out.println(e.getMessage());
+}
+System.out.println("Continue?");
+choice = ab.nextLine();
+}
+while (choice.equalsIgnoreCase("Y"));
+}
+
+
+
+
+//@parameters ssn, @return, @throws SocSecException
+
+
+private static boolean isValid(String ssn) throws 
+SocSecException {
+boolean valid = true;
+if (ssn.isEmpty() || ssn.length()!=11)//makes sure that the length of ssn does not exceed the amount
+{
+valid = false;
+throw new SocSecException("invalid social security, wrong number of characters");
+}
+//we have to check for character(s) at 2 places: 3rd & 6th index
+else {
+
+
+int index= 0;
+while (index < 11 && valid){
+Character ch = ssn.charAt(index);
+//this sees if the numbers are at correct indexes
+if((!Character.isDigit(ch)&&(index==0||index==1||index==2||index==4||index==5||index==7||index==8||index==9||index==10))){
+valid = false;
+throw new SocSecException(
+"Invalid social security number, has a character that is not a digit");
+//sees if the dashes are at their correct spots
+} else if ((ch!='-'&&(index==3||index==6))){
+valid = false;
+throw new SocSecException(
+"invalid social security number, dashes at the wrong positions");
+}
+else{
+index++;
+}
+}
+}
+return valid;
+}
+}
+
+
+
+
+//class for the SocSecException
+public class SocSecException extends Exception{
+private static final long serialVersionUID=1L;
+public SocSecException(String error){
+super(error);
+}
+}
+
+
+
+
+Output:
+ ----jGRASP exec: java SocSecProccessor
+Name?
+Michael
+SSN?
+123-45-6789
+Michael123-45-6789 is Valid
+Continue?
+Y
+Name?
+Khine
+SSN?
+987-65-4321
+Khine987-65-4321 is Valid
+Continue?
+N
+
+
+ ----jGRASP: operation complete.
